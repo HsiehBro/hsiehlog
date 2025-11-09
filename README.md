@@ -116,7 +116,7 @@ Deployment to Cloudflare Pages:
 1) Push your repo to GitHub.
 2) Cloudflare Dashboard → Pages → Create a project → Connect to GitHub.
 3) Build settings:
-   - Build command: `npm run build` (or `npm run cf:build`)
+   - Build command: `npm run cf:build` (or `npx @cloudflare/next-on-pages@1`)
    - Output directory: leave empty (adapter manages outputs)
    - Node version: 18+ (or Default)
 4) Environment variables (Project Settings → Environment Variables):
@@ -125,7 +125,7 @@ Deployment to Cloudflare Pages:
    - If you switch to an HTTPS email API, add those creds too.
 5) Deploy.
 
-The build script automatically uses `@cloudflare/next-on-pages` to transform the Next.js output for Cloudflare Pages.
+**Important:** The `build` script runs `next build` (used by the adapter internally). For Cloudflare Pages, use `cf:build` which runs the adapter. The adapter will call `npm run build` internally to build Next.js, then transform the output for Cloudflare Pages.
 
 Local Cloudflare preview (optional):
 ```bash
