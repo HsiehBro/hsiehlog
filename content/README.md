@@ -112,11 +112,11 @@ CONTACT_TO=your-address@yourdomain.com
 
 Cloudflare supports Next.js via the official adapter.
 
-Option A — Cloudflare adapter scripts (recommended):
+Deployment to Cloudflare Pages:
 1) Push your repo to GitHub.
 2) Cloudflare Dashboard → Pages → Create a project → Connect to GitHub.
 3) Build settings:
-   - Build command: `npm run cf:build`
+   - Build command: `npm run build` (or `npm run cf:build`)
    - Output directory: leave empty (adapter manages outputs)
    - Node version: 18+ (or Default)
 4) Environment variables (Project Settings → Environment Variables):
@@ -125,13 +125,14 @@ Option A — Cloudflare adapter scripts (recommended):
    - If you switch to an HTTPS email API, add those creds too.
 5) Deploy.
 
+The build script automatically uses `@cloudflare/next-on-pages` to transform the Next.js output for Cloudflare Pages.
+
 Local Cloudflare preview (optional):
 ```bash
 npm run cf:preview
 ```
 
-Option B — Cloudflare Next.js preset:
-- Use default build command `npm run build`. The preset will detect Next.js and handle output.
+Note: The Cloudflare adapter may not work on Windows. For local testing, use `npm run dev` or test on Linux/WSL.
 
 Contact form on Cloudflare:
 - SMTP is not supported on Pages runtime.
