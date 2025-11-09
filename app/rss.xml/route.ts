@@ -1,7 +1,7 @@
-// For Edge Runtime compatibility, we need to avoid file system APIs
-// The @cloudflare/next-on-pages adapter handles this by allowing
-// file access during build time, but we still need Edge Runtime config
+import { getAllPosts, getPostBySlug } from "@/lib/md";
+
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 function escapeXml(value: string) {
   return value
@@ -10,10 +10,6 @@ function escapeXml(value: string) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
-
-// Import posts data - this will work during build time
-// The adapter will make this available at runtime
-import { getAllPosts, getPostBySlug } from "@/lib/md";
 
 export async function GET() {
   const site = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
