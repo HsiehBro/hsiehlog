@@ -1,7 +1,7 @@
-import { getAllPosts, getPostBySlug } from "@/lib/md";
-
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+import { getAllPosts, getPostBySlug } from "@/lib/md";
 
 function escapeXml(value: string) {
   return value
