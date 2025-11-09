@@ -1,8 +1,8 @@
 // ✅ 新增这个 interface
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 import { getAllPosts, getPostBySlug } from "@/lib/md";
@@ -15,16 +15,20 @@ export async function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }
 
+// ✅ 注意：这里要 `await params`
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   return {
     title: post?.meta.title ?? "Post",
     description: post?.meta.description ?? "",
   };
 }
 
+// ✅ 同样这里
 export default async function BlogPostPage({ params }: PageProps) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   if (!post) {
     return <div>Post not found</div>;
   }
