@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { GoogleAnalytics } from "@/lib/utils";
+// import { GoogleAnalytics } from "@/lib/utils";
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        <GoogleAnalytics />
+        {/* <GoogleAnalytics /> */}
         <Header />
         <main className="flex-1 container py-8">{children}</main>
         <Footer />
