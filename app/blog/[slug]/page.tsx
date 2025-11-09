@@ -1,3 +1,10 @@
+// ✅ 新增这个 interface
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
+
 import { getAllPosts, getPostBySlug } from "@/lib/md";
 import type { Metadata } from "next";
 
@@ -8,7 +15,7 @@ export async function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
   return {
     title: post?.meta.title ?? "Post",
@@ -16,7 +23,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPostBySlug(params.slug);
   if (!post) {
     return <div>Post not found</div>;
@@ -26,7 +33,6 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     <article className="prose max-w-none">
       <h1>{post.meta.title}</h1>
       {post.meta.date && <p className="text-sm text-gray-500">{post.meta.date}</p>}
-      {/* eslint-disable-next-line react/no-danger */}
       <div dangerouslySetInnerHTML={{ __html: post.html }} />
     </article>
   );
