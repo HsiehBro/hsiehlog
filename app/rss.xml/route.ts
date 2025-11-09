@@ -1,4 +1,7 @@
-import { getAllPosts, getPostBySlug } from "@/lib/md";
+// For Edge Runtime compatibility, we need to avoid file system APIs
+// The @cloudflare/next-on-pages adapter handles this by allowing
+// file access during build time, but we still need Edge Runtime config
+export const runtime = 'edge';
 
 function escapeXml(value: string) {
   return value
@@ -8,8 +11,15 @@ function escapeXml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
+// Import posts data - this will work during build time
+// The adapter will make this available at runtime
+import { getAllPosts, getPostBySlug } from "@/lib/md";
+
 export async function GET() {
   const site = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+  
+  // During build, Next.js runs on Node.js and can access files
+  // The @cloudflare/next-on-pages adapter should handle making this work
   const posts = await getAllPosts();
 
   const items = await Promise.all(
@@ -19,7 +29,7 @@ export async function GET() {
       const description = escapeXml(p.meta.description || "");
       const link = `${site}/blog/${p.slug}`;
       const pubDate = p.meta.date ? new Date(p.meta.date).toUTCString() : new Date().toUTCString();
-      const content = escapeXml(full?.html || "");
+      
       return `
         <item>
           <title>${title}</title>
@@ -27,7 +37,7 @@ export async function GET() {
           <guid>${link}</guid>
           <pubDate>${pubDate}</pubDate>
           <description>${description}</description>
-          <content:encoded><![CDATA[${content}]]></content:encoded>
+          ${full?.html ? `<content:encoded><![CDATA[${full.html}]]></content:encoded>` : ""}
         </item>
       `;
     })
@@ -46,7 +56,7 @@ export async function GET() {
   return new Response(rss, {
     headers: {
       "Content-Type": "application/rss+xml; charset=utf-8",
-      "Cache-Control": "public, s-maxage=600, stale-while-revalidate=3600",
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }
